@@ -52,6 +52,10 @@ psql ... --username=postgres ...
 ## Comandos PSQL
 - `\l` : Lista las bases de datos
 - `\c {db_name}`: Cambiar a una base de datos existente
+- `\d`: Describe las tablas de la base de datos actual
+- `\ds`: Secuencias,que se crean con el tipo de datos `serial`
+- `\di` : listar los indices 
+- `\dp \z`: listado de privilegios de las tablas  
 
 ## Tipos de datos
 ### Tipos de Datos Numéricos
@@ -157,3 +161,107 @@ CREATE TABLE camper(
     sexo_camper sexo NOT NULL
 );
 ```
+
+
+## Ejemplo general de tipos de datos 
+``` SQL 
+CREATE TABLE ejemplo (
+    id serial PRIMARY KEY ,
+    nombre varchar (100) NOT NULL,
+    descripcion  text NULL,
+    precio numeric(10,2) NOT NULL,
+    en_stock boolean NOT NULL,
+    fecha_creacion date NOT NULL,
+    hora_creacion time NOT NULL,
+    fecha_hora timestamp NOT NULL,
+    fecha_hora_zona timestamp with time zone,
+    duracion interval,
+    direccion_ip inet,
+    direccion_mac marcador,
+    punto_geometrico point,
+    datos_json json,
+    datos_jsonb jsonb,
+    identificador_unico uuid,
+    cantidad_monetario money,
+    rango int4range,
+    colores_preferido varchar (20) []
+
+);
+
+```
+
+## tablas de ejemplos 
+``` SQL
+CREATE TABLE empleados(
+    id serial,
+    nombre varchar(100) NOT NULL,
+    edad integer NOT NULL,
+    salario numeric(10,2) NOT NULL,
+    fecha_contrato date,
+    vigente boolean DEFAULT true
+);
+CREATE TABLE departamentos(
+    id serial,
+    nombre varchar(100) NOT NULL,
+    vigente boolean DEFAULT true,
+    PRIMARY KEY(id)
+);
+
+ALTER TABLE empleados ADD COLUMN departamento_id integer NOT NULL;
+
+
+```
+# SOLUCION 
+
+ALTER TABLE empleados ADD CONSTRAINT unique_name UNIQUE (nombre);
+
+ALTER TABLE empleados ADD CONSTRAINT ck_edad CHECK (edad >= 18);
+
+ALTER TABLE empleados ALTER COLUMN salario SET DEFAULT 400.00;
+
+
+# ACTIVIDAD 
+
+
+``` SQL 
+
+CREATE TABLE country (
+    id serial,
+    name varchar(50)
+);
+
+ALTER TABLE country ADD PRIMARY KEY(id);
+ALTER TABLE country  ALTER COLUMN id SET NOT NULL;
+ALTER TABLE country  ALTER COLUMN name SET NOT NULL;
+ALTER TABLE country ADD CONSTRAINT uq_name UNIQUE (name);
+
+
+CREATE TABLE region (
+    id serial,
+    name varchar(50),
+    idcountry integer
+);
+
+ALTER TABLE region ADD PRIMARY KEY(id);
+ALTER TABLE region  ALTER COLUMN id SET NOT NULL;
+ALTER TABLE region  ALTER COLUMN name SET NOT NULL;
+ALTER TABLE region ADD CONSTRAINT uq_nameregi UNIQUE (name);
+ALTER TABLE region  ALTER COLUMN idcountry SET NOT NULL;
+
+
+CREATE TABLE city (
+    id serial,
+    name varchar(50),
+    idregion integer
+);
+
+ALTER TABLE city ADD PRIMARY KEY(id);
+ALTER TABLE city  ALTER COLUMN id SET NOT NULL;
+ALTER TABLE city  ALTER COLUMN name SET NOT NULL;
+ALTER TABLE city ADD CONSTRAINT uq_namecity UNIQUE (name);
+ALTER TABLE city ADD CONSTRAINT uq_idregion UNIQUE (idregion);
+ALTER TABLE city  ALTER COLUMN idregion SET NOT NULL;
+
+```
+
+
